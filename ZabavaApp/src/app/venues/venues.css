@@ -1,0 +1,26 @@
+@media (max-width: 599px) {
+    #logo-zabava  {
+        display: none;
+      }        
+  }
+
+  html {
+    background-color: #4D4D4D;
+}
+
+  .venues-all {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .venues-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+    gap: 22px;
+    padding-top: 2%;
+    padding-bottom: 8%;
+    padding-left: 2%;
+  }

@@ -1,0 +1,78 @@
+html {
+    background-color: #4D4D4D;
+}
+
+.go-back-header {
+    display: flex;
+    flex-grow: 1;
+    min-width: 100%;
+    min-height: 57px;
+    max-height: 67px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    background-color: white;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.register-page-box {
+    background-color: white;
+}
+
+.go-back-button {
+    color: black;
+    text-transform: capitalize;  
+}
+
+.go-back-button:hover {
+    background-color: #0000000d;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 9%;
+    padding-top: 9%;
+    min-width: 375px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 375px;
+    max-width: 500px;
+    gap: 12px;
+    padding: 12px;
+}
+
+.register-link {
+    color: #4D4D4D;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: end;
+}
+
+.login-link {
+    color: #000000;
+    text-decoration: #000000;
+    text-decoration: underline;
+}
+
+.register-button {
+    background-color: #F16813;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.register-button:hover {
+    background-color: #F16813;
+}
+
+.register-bottom-div {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1px;
+    justify-content: center;
+    font-size: small;
+}

@@ -1,0 +1,104 @@
+html {
+    background-color: #4D4D4D;
+}
+
+.go-back-header {
+    display: flex;
+    flex-grow: 1;
+    min-width: 100%;
+    min-height: 57px;
+    max-height: 67px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    background-color: white;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-page-box {
+    background-color: white;
+}
+
+.go-back-button {
+    color: black;
+    text-transform: capitalize;
+}
+
+.go-back-button:hover {
+    background-color: #0000000d;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    min-width: 375px;
+}
+
+.profile-details {
+    margin-bottom: 20px;
+}
+
+.profile-input {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.staff-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.staff-input {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.staff-form .MuiTypography-body2 {
+    margin-top: -12px;
+    margin-bottom: 15px;
+}
+
+
+.want-to-work-button {
+    background-color: #F16813;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.want-to-work-button:hover {
+    background-color: #F16813;
+}
+
+.submit-form-button {
+    background-color: #F16813;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.submit-form-button {
+    background-color: #F16813;
+}
+
+.edit-button {
+    background-color: #F16813;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.edit-button:hover {
+    background-color: #F16813;
+}
+
+.save-button {
+    background-color: #F16813;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.save-button:hover {
+    background-color: #F16813;
+}
