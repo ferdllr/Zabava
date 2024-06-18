@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,23 +16,24 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
+import { getUserInfo, storeToken } from '../api/authHandler'; // Import the necessary auth functions
 
 const CustomSearchIcon = styled(SearchIcon)({
   color: 'grey',
-  cursor: 'pointer'
+  cursor: 'pointer',
 });
 
 const SearchButton = styled('div')({
   marginRight: 0,
   marginLeft: 0,
   padding: '12px 6px',
-  borderRadius: '50%'
+  borderRadius: '50%',
 });
 
 export default function PrimaryAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [user, setUser] = useState<null | { name: string; email: string }>(null); // State to hold user info
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -55,6 +57,20 @@ export default function PrimaryAppBar() {
 
   const router = useRouter();
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userInfo = await getUserInfo();
+      setUser(userInfo);
+    };
+    fetchUserInfo();
+  }, []);
+
+  const handleLogout = () => {
+    storeToken(''); // Clear the token
+    setUser(null); // Reset user state
+    router.push('/login'); // Redirect to login
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -72,9 +88,19 @@ export default function PrimaryAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => { router.push('/login'); }}>Login</MenuItem>
-      <MenuItem onClick={() => { router.push('/register'); }}>Register</MenuItem>
-      <MenuItem onClick={() => { router.push('/profile'); }}>Profile</MenuItem>
+      {user ? (
+        <>
+          <MenuItem disabled>{user.name}</MenuItem>
+          <MenuItem disabled>{user.email}</MenuItem>
+          <MenuItem onClick={() => { router.push('/profile'); }}>Profile</MenuItem>
+          <MenuItem onClick={handleLogout}>Sair</MenuItem>
+        </>
+      ) : (
+        <>
+          <MenuItem onClick={() => { router.push('/login'); }}>Login</MenuItem>
+          <MenuItem onClick={() => { router.push('/register'); }}>Register</MenuItem>
+        </>
+      )}
     </Menu>
   );
 

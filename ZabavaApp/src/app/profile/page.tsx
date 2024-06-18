@@ -1,11 +1,11 @@
 // Profile.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Button, FormControl, InputLabel, Input, Box, Typography, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, Input, Box, Typography, TextField, AppBar } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import './profile.css';
 import Footer from '../components/Footer';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import PrimaryAppBar from '../components/AppBar';
 import { getUserInfo } from '../api/authHandler';
 
 const Profile: React.FC = () => {
@@ -71,9 +71,7 @@ const Profile: React.FC = () => {
 
     return (
         <Box className="profile-page-box">
-            <header className="go-back-header">
-                <Button className="go-back-button" variant="text" onClick={() => router.back()}><ArrowBackIosNewIcon color='disabled' />Voltar</Button>
-            </header>
+            <PrimaryAppBar />
             <div className="profile-content">
                 <Typography variant="h4">Perfil</Typography>
                 <Box className="profile-details">

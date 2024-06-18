@@ -36,5 +36,9 @@ export async function getUserInfo() {
     if (!token) {
         return null;
     }
-    return await decryptToken(token);
+    const decodedToken = await decryptToken(token);
+    if (!decodedToken) {
+        return null;
+    }
+    return { name: decodedToken.name, email: decodedToken.email };
 }
