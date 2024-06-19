@@ -1,7 +1,7 @@
 // Profile.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Button, FormControl, InputLabel, Input, Box, Typography, TextField, AppBar } from '@mui/material';
+import { Button, FormControl, InputLabel, Input, Box, Typography, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import './profile.css';
 import Footer from '../components/Footer';
@@ -18,9 +18,8 @@ const Profile: React.FC = () => {
         email: '',
     });
     const [staffData, setStaffData] = useState({
-        role: '',
-        experience: '',
-        proof: ''
+        funcao: '',
+        disponibilidade: ''
     });
 
     const router = useRouter();
@@ -51,14 +50,18 @@ const Profile: React.FC = () => {
         }
     };
 
-    const handleStaffSubmit = () => {
-        if (staffData.role && staffData.experience && staffData.proof) {
+    const handleStaffSubmit = async () => {
+        if (staffData.funcao && staffData.disponibilidade) {
             setIsValidating(true);
-            // Simular tempo para validação
-            setTimeout(() => {
+            try {
+                await submitStaffData(staffData);
                 setIsValidating(false);
                 setIsFormSubmitted(true);
-            }, 3000);
+            } catch (error) {
+                setIsValidating(false);
+                alert('Ocorreu um erro ao enviar os dados. Tente novamente.');
+                console.log(error)
+            }
         } else {
             alert('Por favor, preencha todos os campos.');
         }
@@ -67,6 +70,20 @@ const Profile: React.FC = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setStaffData(prevData => ({ ...prevData, [name]: value }));
+    };
+
+    const submitStaffData = async (data: typeof staffData) => {
+        const response = await fetch('http://localhost:4000/api/trabalho/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error('Erro ao enviar os dados');
+        }
+        return response.json();
     };
 
     return (
@@ -109,8 +126,8 @@ const Profile: React.FC = () => {
                         <FormControl className="staff-input">
                             <TextField
                                 label="Função"
-                                name="role"
-                                value={staffData.role}
+                                name="funcao"
+                                value={staffData.funcao}
                                 onChange={handleInputChange}
                                 InputProps={{ readOnly: isFormSubmitted }}
                             />
@@ -118,17 +135,8 @@ const Profile: React.FC = () => {
                         <FormControl className="staff-input">
                             <TextField
                                 label="Experiência Anterior"
-                                name="experience"
-                                value={staffData.experience}
-                                onChange={handleInputChange}
-                                InputProps={{ readOnly: isFormSubmitted }}
-                            />
-                        </FormControl>
-                        <FormControl className="staff-input">
-                            <TextField
-                                label="Comprovantes de Habilidades"
-                                name="proof"
-                                value={staffData.proof}
+                                name="disponibilidade"
+                                value={staffData.disponibilidade}
                                 onChange={handleInputChange}
                                 InputProps={{ readOnly: isFormSubmitted }}
                             />
