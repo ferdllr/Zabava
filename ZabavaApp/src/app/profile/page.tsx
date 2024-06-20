@@ -26,12 +26,17 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         async function fetchUserData() {
-            const userInfo = await getUserInfo();
-            if (userInfo) {
-                setUserData({
-                    username: userInfo.name,
-                    email: userInfo.email,
-                });
+            try {
+                const userInfo = await getUserInfo();
+                if (userInfo) {
+                    setUserData({
+                        username: userInfo.name,
+                        email: userInfo.email,
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao buscar informações do usuário:', error);
+                alert('Não foi possível carregar as informações do usuário. Tente novamente mais tarde.');
             }
         }
 
@@ -54,13 +59,25 @@ const Profile: React.FC = () => {
         if (staffData.funcao && staffData.disponibilidade) {
             setIsValidating(true);
             try {
-                await submitStaffData(staffData);
-                setIsValidating(false);
-                setIsFormSubmitted(true);
+                const response = await fetch('http://localhost:4000/api/trabalho/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(staffData),
+                });
+                console.log(response)
+                if (response.status == 200) {
+                    alert('dados enviados com sucesso!');
+                    setIsValidating(false);
+                    setIsFormSubmitted(true);
+                } else{
+                    throw new Error('Erro ao enviar os dados');
+                }
             } catch (error) {
                 setIsValidating(false);
                 alert('Ocorreu um erro ao enviar os dados. Tente novamente.');
-                console.log(error)
+                console.error('Erro ao enviar os dados do staff:', error);
             }
         } else {
             alert('Por favor, preencha todos os campos.');
@@ -70,20 +87,6 @@ const Profile: React.FC = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setStaffData(prevData => ({ ...prevData, [name]: value }));
-    };
-
-    const submitStaffData = async (data: typeof staffData) => {
-        const response = await fetch('http://localhost:4000/api/trabalho/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-            throw new Error('Erro ao enviar os dados');
-        }
-        return response.json();
     };
 
     return (

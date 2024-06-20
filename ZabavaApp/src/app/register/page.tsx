@@ -14,7 +14,7 @@ export enum TipoUsuario {
     STAFF = 'STAFF'
 }
 
-interface RegisterRequestBody {
+interface UserRequestBody {
     name: string;
     email: string;
     password: string;
@@ -40,24 +40,22 @@ const Register: React.FC = () => {
         }
 
         try {
-            const data: RegisterRequestBody = { name, email, password, cpf, tipo };
-            const response = await fetch('http://localhost:4000/api/user/register', {
+            const data: UserRequestBody = { name, email, password, cpf, tipo };
+            console.log(JSON.stringify(data))
+            const response = await fetch('http://localhost:4000/api/user/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             });
+            console.log(response.status)
 
-            if (!response.ok) {
-                throw new Error('Registro falhou');
+            if (response.status === 200) {
+                router.push('/login');
+            } else {
+                throw new Error(`Registro falhou: ${response.statusText}`);
             }
-
-            const responseData = await response.json();
-            console.log(responseData);
-
-            // Redirecionar para a página de login ou home
-            router.push('/login'); // Ajuste o caminho conforme necessário
         } catch (error) {
             console.error('Registration error:', error);
             // Tratar o erro de registro (exibir mensagem de erro ao usuário)
