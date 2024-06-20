@@ -3,18 +3,22 @@ import { LocalModel } from '../models/local';
 import { JsonObject } from 'swagger-ui-express';
 
 interface LocalRequestBody {
+  nome: string;
+  bairro: string;
   endereco: string;
   descricao: string;
-  cep: string;
   estado: string;
+  rank: number;
 }
 
 interface LocalUpdateBody {
   id: string;
+  nome?: string;
+  bairro?: string;
   endereco?: string;
   descricao?: string;
-  cep?: string;
   estado?: string;
+  rank?: number;
 }
 
 @Route('api/local')

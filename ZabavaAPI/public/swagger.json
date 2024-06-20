@@ -93,24 +93,33 @@
 			},
 			"LocalRequestBody": {
 				"properties": {
+					"nome": {
+						"type": "string"
+					},
+					"bairro": {
+						"type": "string"
+					},
 					"endereco": {
 						"type": "string"
 					},
 					"descricao": {
 						"type": "string"
 					},
-					"cep": {
-						"type": "string"
-					},
 					"estado": {
 						"type": "string"
+					},
+					"rank": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
+					"nome",
+					"bairro",
 					"endereco",
 					"descricao",
-					"cep",
-					"estado"
+					"estado",
+					"rank"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -120,17 +129,24 @@
 					"id": {
 						"type": "string"
 					},
+					"nome": {
+						"type": "string"
+					},
+					"bairro": {
+						"type": "string"
+					},
 					"endereco": {
 						"type": "string"
 					},
 					"descricao": {
 						"type": "string"
 					},
-					"cep": {
-						"type": "string"
-					},
 					"estado": {
 						"type": "string"
+					},
+					"rank": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
