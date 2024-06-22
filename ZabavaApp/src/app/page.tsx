@@ -1,7 +1,7 @@
 'use client'
 import {useRouter } from 'next/navigation'
 import PrimaryAppBar from "./components/AppBar";
-import './page.css' 
+import './page.css';
 import WovenImageList from './components/WovenImageList';
 import Image from 'next/image';
 import Footer from './components/Footer';

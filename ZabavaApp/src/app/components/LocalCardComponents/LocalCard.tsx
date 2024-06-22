@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import React from 'react';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -7,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red, yellow } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -15,37 +14,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-
-const CardContainer = styled('div')({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '12px', // Gap between cards
-});
-
-// Interface definition LocalData
-interface LocalData {
-  nome: string;
-  bairro: string;
-  endereco: string;
-  capacidade: number;
-  rank: number;
-  descricao: string;
-}
-
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+import { LocalData } from './LocalData';
+import ExpandMore from './ExpandMore';
 
 interface LocalCardProps {
   local: LocalData;
@@ -59,15 +29,9 @@ const LocalCard: React.FC<LocalCardProps> = ({ local }) => {
   };
 
   const renderStars = (rank: number) => {
-    const stars = [];
-    for (let i = 0; i < 5; i++) {
-      if (i < rank) {
-        stars.push(<StarIcon key={i} sx={{ color: yellow[700] }} />);
-      } else {
-        stars.push(<StarBorderIcon key={i} sx={{ color: yellow[700] }} />);
-      }
-    }
-    return stars;
+    return Array.from({ length: 5 }, (_, i) => 
+      i < rank ? <StarIcon key={i} sx={{ color: yellow[700] }} /> : <StarBorderIcon key={i} sx={{ color: yellow[700] }} />
+    );
   };
 
   return (
@@ -124,18 +88,4 @@ const LocalCard: React.FC<LocalCardProps> = ({ local }) => {
   );
 };
 
-interface LocalListProps {
-  data: LocalData[];
-}
-
-const LocalList: React.FC<LocalListProps> = ({ data }) => {
-  return (
-    <CardContainer>
-      {data.map((local: LocalData, index: number) => (
-        <LocalCard key={index} local={local} />
-      ))}
-    </CardContainer>
-  );
-};
-
-export default LocalList;
+export default LocalCard;
