@@ -1,6 +1,6 @@
-'use client'; // Adicione isso no topo do seu arquivo para indicar que é um Componente do Cliente
-import { useRouter } from 'next/navigation'; // Importe useRouter de 'next/navigation'
-import { useState } from 'react';
+'use client';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react'; // Importe useEffect para carregar dados do usuário após a renderização inicial
 import PrimaryAppBar from '../components/AppBar';
 import Footer from '../components/Footer';
 import './createEvent.css';
@@ -8,10 +8,23 @@ import { TextField } from '@mui/material';
 import CommonlyUsedComponents from '../components/DateTimePicker';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { getUserInfo } from '../api/authHandler'; // Importe a função getUserInfo
 
 export default function CreateEvent() {
   const [eventDates, setEventDates] = useState([<CommonlyUsedComponents key={0} />]);
-  const router = useRouter(); // useRouter importado de next/navigation
+  const [userName, setUserName] = useState(''); // Estado para armazenar o nome do usuário
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userInfo = await getUserInfo();
+      if (userInfo) {
+        setUserName(userInfo.name); // Define o nome do usuário no estado local
+      }
+    };
+
+    fetchUserInfo();
+  }, []); // O segundo argumento vazio [] garante que o useEffect só seja executado uma vez
 
   const handleAddDate = () => {
     const newEventDates = [...eventDates, <CommonlyUsedComponents key={eventDates.length} />];
@@ -42,7 +55,7 @@ export default function CreateEvent() {
         <form action="" className='createEvent-form'>
           <div className='createEvent-form-user'>
             <h4 className='createEvent-h4'>Dados do Usuário</h4>
-            <TextField required label="Nome do Usuário" />
+            <TextField required label="Nome do Usuário" value={userName} disabled /> {/* Exibe o nome do usuário */}
           </div>
           <div className='createEvent-form-event'>
             <h4 className='createEvent-h4'>Dados do Evento</h4>

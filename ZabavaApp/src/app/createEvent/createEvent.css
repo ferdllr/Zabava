@@ -41,6 +41,10 @@
     cursor: pointer;
   }
 
+  #remove-date-button:active {
+    color: rgb(163, 0, 0);
+  }
+
   .createEvent-add-date-button-container {
     display: flex;
     align-items: center;

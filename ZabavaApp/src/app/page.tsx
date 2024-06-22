@@ -1,14 +1,37 @@
 'use client'
-import {useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react';
 import PrimaryAppBar from "./components/AppBar";
 import './page.css';
 import WovenImageList from './components/WovenImageList';
 import Image from 'next/image';
 import Footer from './components/Footer';
-
+import { getUserInfo } from './api/authHandler';
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
+  const [userLoggedIn, setUserLoggedIn] = useState(false); // Estado para verificar se o usuário está logado
+
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      const userInfo = await getUserInfo();
+      if (userInfo) {
+        setUserLoggedIn(true); // Define como true se houver usuário conectado
+      } else {
+        setUserLoggedIn(false); // Define como false se não houver usuário conectado
+      }
+    };
+
+    checkUserLoggedIn();
+  }, []); // O segundo argumento vazio [] garante que o useEffect só seja executado uma vez
+
+  const handleOrganizeEventClick = () => {
+    if (userLoggedIn) {
+      router.push('/createEvent'); // Redireciona para a página de criar eventos se o usuário estiver conectado
+    } else {
+      router.push('/login'); // Redireciona para a página de login se o usuário não estiver conectado
+    }
+  };
 
   return (
     <main className='home-main'>
@@ -22,7 +45,7 @@ export default function Home() {
                 ao virtual, do pré ao pós-evento, tudo em um só lugar
               </p>
               <div className="home-call-to-action-buttons-container">
-              <button className="organizar-evento" onClick={() => {router.push('/createEvent')}}>                  
+                <button className="organizar-evento" onClick={handleOrganizeEventClick}>                  
                   <span className="text">ORGANIZAR EVENTOS</span>
                   <span className="circle"></span>
                 </button>
