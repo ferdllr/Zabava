@@ -3,12 +3,6 @@
 
 /*all of the page*/
 
-@media (max-width: 599px) {
-  #logo-zabava  {
-      display: none;
-    }        
-}
-
 .home-main {
   display: flex;
   flex-direction: column;

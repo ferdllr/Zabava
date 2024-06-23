@@ -1,10 +1,4 @@
-@media (max-width: 599px) {
-    #logo-zabava  {
-        display: none;
-      }
-  }
-
-  html {
+html {
     background-color: #4D4D4D;
 }
 
