@@ -58,7 +58,7 @@ const Search: React.FC = () => {
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width: '200px', height: '40px', marginBottom: '6px', marginTop: '2%', marginLeft: '2%' }}
+          sx={{ width: '200px', marginBottom: '6px', marginTop: '2%', marginLeft: '2%' }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
