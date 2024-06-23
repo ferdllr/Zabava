@@ -11,10 +11,10 @@ const Footer = () => {
                 <div className="footer-tittles">
                     <h4>Siga a Zabava</h4>
                     <div className="footer-icons-socialmedia">
-                        <InstagramIcon />
-                        <FacebookIcon />
-                        <LinkedInIcon />
-                        <TwitterIcon />
+                        <InstagramIcon style={{cursor: 'pointer'}} />
+                        <FacebookIcon style={{cursor: 'pointer'}} />
+                        <LinkedInIcon style={{cursor: 'pointer'}} />
+                        <TwitterIcon style={{cursor: 'pointer'}} />
                     </div>
                 </div>
 
