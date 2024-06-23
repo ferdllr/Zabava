@@ -1,40 +1,44 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react'; // Importe useEffect para carregar dados do usuário após a renderização inicial
+import { TextField, Button, Typography, MenuItem } from '@mui/material';
 import PrimaryAppBar from '../components/AppBar';
 import Footer from '../components/Footer';
+import { getAllLocals } from '../api/localHandler';
+import { getUserInfo } from '../api/authHandler';
 import './createEvent.css';
-import { TextField } from '@mui/material';
-import CommonlyUsedComponents from '../components/DateTimePicker';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { getUserInfo } from '../api/authHandler'; // Importe a função getUserInfo
 
 export default function CreateEvent() {
-  const [eventDates, setEventDates] = useState([<CommonlyUsedComponents key={0} />]);
-  const [userName, setUserName] = useState(''); // Estado para armazenar o nome do usuário
+  const [userName, setUserName] = useState('');
+  const [nomeEvento, setNomeEvento] = useState('');
+  const [selectedLocal, setSelectedLocal] = useState('');
+  const [descricaoEvento, setDescricaoEvento] = useState('');
+  const [dataInicio, setDataInicio] = useState<string>('');
+  const [dataFim, setDataFim] = useState<string>('');
+  const [locais, setLocais] = useState<any[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userInfo = await getUserInfo();
       if (userInfo) {
-        setUserName(userInfo.name); // Define o nome do usuário no estado local
+        setUserName(userInfo.name);
       }
     };
-
     fetchUserInfo();
-  }, []); // O segundo argumento vazio [] garante que o useEffect só seja executado uma vez
+  }, []);
 
-  const handleAddDate = () => {
-    const newEventDates = [...eventDates, <CommonlyUsedComponents key={eventDates.length} />];
-    setEventDates(newEventDates);
-  };
-
-  const handleRemoveDate = (indexToRemove: number) => {
-    const newEventDates = eventDates.filter((_, index) => index !== indexToRemove);
-    setEventDates(newEventDates);
-  };
+  useEffect(() => {
+    const fetchLocais = async () => {
+      try {
+        const locaisData = await getAllLocals();
+        setLocais(locaisData);
+      } catch (error) {
+        console.error('Erro ao buscar locais:', error);
+      }
+    };
+    fetchLocais();
+  }, []);
 
   const handleCancel = () => {
     if (window.confirm('Os dados preenchidos serão apagados. Deseja continuar?')) {
@@ -44,44 +48,105 @@ export default function CreateEvent() {
 
   const handleSubmit = () => {
     if (window.confirm('O evento será salvo. Os dados estão corretos?')) {
-      // Lógica para salvar o evento
+      const novoEvento = {
+        nomeEvento,
+        local: selectedLocal,
+        dataInicio: new Date(dataInicio),
+        dataFim: new Date(dataFim),
+        descricaoEvento,
+      };
+      console.log('Novo evento:', novoEvento);
     }
+  };
+
+  const handleChangeLocal = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedLocal(e.target.value as string);
   };
 
   return (
     <div className='createEvent-all'>
       <PrimaryAppBar />
       <div className='createEvent-content'>
-        <form action="" className='createEvent-form'>
+        <form className='createEvent-form'>
           <div className='createEvent-form-user'>
-            <h4 className='createEvent-h4'>Dados do Usuário</h4>
-            <TextField required label="Nome do Usuário" value={userName} disabled /> {/* Exibe o nome do usuário */}
+            <Typography variant="h4" className='createEvent-h4'>Dados do Usuário</Typography>
+            <TextField required label="Nome do Usuário" value={userName} disabled fullWidth />
           </div>
+
           <div className='createEvent-form-event'>
-            <h4 className='createEvent-h4'>Dados do Evento</h4>
-            <TextField required label="Nome do Evento" sx={{ width: '300px' }} />
-            <TextField required label="Endereço do Evento" sx={{ width: '300px' }} />
-            {eventDates.map((dateComponent, index) => (
-              <div key={index}>
-                {dateComponent}
-                {eventDates.length > 1 && (
-                  <button id='remove-date-button' type="button" onClick={() => handleRemoveDate(index)}>
-                    <DeleteForeverIcon fontSize="small" />
-                  </button>
-                )}
-              </div>
-            ))}
-            <div className='createEvent-add-date-button-container'>
-              <button id='add-date-button' type="button" onClick={handleAddDate}>
-                <AddCircleIcon fontSize="large" />
-              </button>
-              <p id='add-event-title'>Clique para adicionar mais datas para o evento.</p>
-            </div>
-            <TextField required label="Descrição do Evento" multiline sx={{ width: '300px' }} />
+            <Typography variant="h4" className='createEvent-h4'>Dados do Evento</Typography>
+            <TextField
+              required
+              label="Nome do Evento"
+              fullWidth
+              value={nomeEvento}
+              onChange={(e) => setNomeEvento(e.target.value)}
+            />
+            <TextField
+              required
+              select
+              label="Selecione o Local"
+              fullWidth
+              value={selectedLocal}
+              onChange={handleChangeLocal}
+            >
+              {locais.map((local) => (
+                <MenuItem key={local._id} value={local._id}>
+                  {local.nome} - {local.endereco}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              required
+              label="Data de Início"
+              type="datetime-local"
+              fullWidth
+              value={dataInicio}
+              onChange={(e) => setDataInicio(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              required
+              label="Data de Fim"
+              type="datetime-local"
+              fullWidth
+              value={dataFim}
+              onChange={(e) => setDataFim(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              required
+              label="Descrição do Evento"
+              multiline
+              fullWidth
+              rows={4}
+              value={descricaoEvento}
+              onChange={(e) => setDescricaoEvento(e.target.value)}
+            />
           </div>
+
           <div className='form-main-buttons'>
-            <button id='flush-form-button' type="button" onClick={handleCancel}>Cancelar</button>
-            <button id='submit-form-button' type='submit' onClick={handleSubmit}>Salvar Evento</button>
+            <Button
+              id='flush-form-button'
+              variant="outlined"
+              color="secondary"
+              onClick={handleCancel}
+            >
+              Cancelar
+            </Button>
+            <Button
+              id='submit-form-button'
+              type='button'
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Salvar Evento
+            </Button>
           </div>
         </form>
       </div>

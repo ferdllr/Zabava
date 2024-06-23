@@ -13,12 +13,15 @@ import './search.css'; // Certifique-se de que o caminho está correto
 const Search: React.FC = () => {
   const { selectedTab } = useStore();
   const [localData, setLocalData] = useState<any[]>([]);
+  const [eventData, setEventData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (selectedTab === 'LOCAIS') {
       fetchLocals();
+    } else if (selectedTab === 'EVENTOS') {
+      fetchEvents();
     }
   }, [selectedTab]);
 
@@ -38,6 +41,22 @@ const Search: React.FC = () => {
     }
   };
 
+  const fetchEvents = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:4000/api/evento/getAll');
+      if (!response.ok) {
+        throw new Error('Erro ao buscar eventos');
+      }
+      const data = await response.json();
+      setEventData(data);
+    } catch (error) {
+      console.error('Erro ao buscar eventos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filterLocals = (locals: any[]) => {
     return locals.filter(local =>
       local.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,7 +65,16 @@ const Search: React.FC = () => {
     );
   };
 
-  const filteredData = filterLocals(localData);
+  const filterEvents = (events: any[]) => {
+    return events.filter(event =>
+      (event.nome && event.nome.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (event.descricao && event.descricao.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (event.local && event.local.nome && event.local.nome.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  };
+  
+
+  const filteredData = selectedTab === 'LOCAIS' ? filterLocals(localData) : filterEvents(eventData);
   const hasNoResults = filteredData.length === 0;
 
   return (
@@ -73,13 +101,8 @@ const Search: React.FC = () => {
         <Box className="search-content">
           {selectedTab === 'EVENTOS' && (
             <div>
-              <div>Conteúdo da aba EVENTOS</div>
-            </div>
-          )}
-          {selectedTab === 'LOCAIS' && (
-            <div>
-              {loading && <p>Carregando locais...</p>}
-              {hasNoResults && !loading && (
+              {loading && <p>Carregando eventos...</p>}
+              {!loading && hasNoResults && (
                 <Image
                   src="/not-found.png"
                   width={300}
@@ -88,7 +111,34 @@ const Search: React.FC = () => {
                   style={{ maxWidth: '300px' }}
                 />
               )}
-              {!hasNoResults && !loading && (
+              {!loading && !hasNoResults && (
+                <div className="search-card-list">
+                  {filteredData.map((event) => (
+                    <SearchCard
+                      key={event.id}
+                      title={event.nome}
+                      subtitle={event.descricao}
+                      neighborhood={event.local ? event.local.nome : 'Local não especificado'}
+                      imageUrl={event.imagemUrl}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          {selectedTab === 'LOCAIS' && (
+            <div>
+              {loading && <p>Carregando locais...</p>}
+              {!loading && hasNoResults && (
+                <Image
+                  src="/not-found.png"
+                  width={300}
+                  height={300}
+                  alt="Not found"
+                  style={{ maxWidth: '300px' }}
+                />
+              )}
+              {!loading && !hasNoResults && (
                 <div className="search-card-list">
                   {filteredData.map((local) => (
                     <SearchCard

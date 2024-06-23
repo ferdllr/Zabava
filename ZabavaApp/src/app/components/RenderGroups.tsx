@@ -48,12 +48,12 @@ const RenderGroup: React.FC<RenderGroupProps> = ({ onNeighborhoodSelect }) => {
           <GroupItems>{params.children}</GroupItems>
         </li>
       )}
-      onChange={handleNeighborhoodSelect} // Using callback function made
+      onChange={handleNeighborhoodSelect} // Using callback function
     />
   );
 }
 
-// neighborhoodName = should consume API
+// neighborhoodName = should consume API?
 const neighborhoodName = [
     { title: 'Ecoville' },
     { title: 'Batel' },
