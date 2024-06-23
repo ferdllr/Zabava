@@ -5,11 +5,10 @@ const Tabs: React.FC = () => {
   const { selectedTab, setSelectedTab } = useStore();
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px' }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px', marginTop: '16px' }}>
       <button
         style={{
           padding: '8px 16px',
-          margin: '0 8px',
           border: 'none',
           width: '100px',
           fontWeight: selectedTab === 'EVENTOS' ? 'bold' : 'normal',
@@ -25,7 +24,6 @@ const Tabs: React.FC = () => {
       <button
         style={{
           padding: '8px 16px',
-          margin: '0 8px',
           border: 'none',
           width: '100px',
           fontWeight: selectedTab === 'LOCAIS' ? 'bold' : 'normal',

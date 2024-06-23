@@ -15,8 +15,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { getUserInfo, storeToken } from '../api/authHandler'; // Import the necessary auth functions
+import { useRouter, usePathname } from 'next/navigation';
+import { getUserInfo, storeToken } from '../api/authHandler';
 
 const CustomSearchIcon = styled(SearchIcon)({
   color: 'grey',
@@ -56,6 +56,7 @@ export default function PrimaryAppBar() {
   };
 
   const router = useRouter();
+  const pathname = usePathname(); // Get the current pathname using usePathname()
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -185,11 +186,13 @@ export default function PrimaryAppBar() {
               Zabava
             </Typography>
           </MenuItem>
-          <SearchButton onClick={handleSearchClick}>
-            <IconButton size="small">
-              <CustomSearchIcon />
-            </IconButton>
-          </SearchButton>
+          {pathname !== '/search' && (
+            <SearchButton onClick={handleSearchClick}>
+              <IconButton size="small">
+                <CustomSearchIcon />
+              </IconButton>
+            </SearchButton>
+          )}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails">
