@@ -1,18 +1,20 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
-import { Box } from "@mui/material";
+import { Box, TextField, InputAdornment } from "@mui/material";
 import PrimaryAppBar from "../components/AppBar";
 import Tabs from '../components/Tabs';
 import Footer from "../components/Footer";
 import SearchCard from '../components/SearchCard';
 import useStore from "../store";
 import Image from 'next/image';
+import SearchIcon from '@mui/icons-material/Search';
 import './search.css'; // Certifique-se de que o caminho está correto
 
 const Search: React.FC = () => {
   const { selectedTab } = useStore();
   const [localData, setLocalData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (selectedTab === 'LOCAIS') {
@@ -37,15 +39,34 @@ const Search: React.FC = () => {
   };
 
   const filterLocals = (locals: any[]) => {
-    // Implementar lógica de filtro se necessário
-    return locals; // Por enquanto, retorna todos os locais
+    return locals.filter(local =>
+      local.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      local.endereco.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   };
 
-  const hasNoResults = filterLocals(localData).length === 0;
+  const filteredData = filterLocals(localData);
+  const hasNoResults = filteredData.length === 0;
 
   return (
     <Box className="search-all">
       <PrimaryAppBar />
+      <Box className="search-input-container">
+        <TextField
+          variant="outlined"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ width: '200px', height: '40px', marginBottom: '6px', marginTop: '2%', marginLeft: '2%' }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
       <Box className="search-tabs-and-content">
         <Tabs />
         <Box className="search-content">
@@ -68,7 +89,7 @@ const Search: React.FC = () => {
               )}
               {!hasNoResults && !loading && (
                 <div className="search-card-list">
-                  {filterLocals(localData).map((local) => (
+                  {filteredData.map((local) => (
                     <SearchCard
                       key={local.id}
                       title={local.nome}
