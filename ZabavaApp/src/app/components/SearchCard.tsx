@@ -5,9 +5,10 @@ interface SearchCardProps {
   title: string;
   subtitle: string;
   imageUrl: string;
+  neighborhood: string;
 }
 
-const SearchCard: React.FC<SearchCardProps> = ({ title, subtitle, imageUrl }) => {
+const SearchCard: React.FC<SearchCardProps> = ({ title, subtitle, imageUrl, neighborhood }) => {
   const cardStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -56,7 +57,7 @@ const SearchCard: React.FC<SearchCardProps> = ({ title, subtitle, imageUrl }) =>
       />
       <div style={textContainerStyle}>
         <div style={titleStyle}>{title}</div>
-        <div style={subtitleStyle}>{subtitle}</div>
+        <div style={subtitleStyle}>{subtitle} - {neighborhood}</div>
       </div>
     </div>
   );

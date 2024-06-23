@@ -41,7 +41,8 @@ const Search: React.FC = () => {
   const filterLocals = (locals: any[]) => {
     return locals.filter(local =>
       local.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      local.endereco.toLowerCase().includes(searchTerm.toLowerCase())
+      local.endereco.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      local.bairro.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 
@@ -94,6 +95,7 @@ const Search: React.FC = () => {
                       key={local.id}
                       title={local.nome}
                       subtitle={local.endereco}
+                      neighborhood={local.bairro}
                       imageUrl={local.imagemUrl}
                     />
                   ))}
