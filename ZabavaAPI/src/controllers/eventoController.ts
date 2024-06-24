@@ -3,6 +3,7 @@ import { EventoModel } from '../models/evento';
 import { JsonObject } from 'swagger-ui-express';
 
 interface EventoRequestBody {
+  nome: string;
   produtor: string;
   local: string;
   dataInicio: Date;
@@ -12,6 +13,7 @@ interface EventoRequestBody {
 
 interface EventoUpdateBody {
   id: string;
+  nome: string;
   produtor?: string;
   local?: string;
   dataInicio?: Date;

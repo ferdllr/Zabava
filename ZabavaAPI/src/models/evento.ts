@@ -3,6 +3,10 @@ import { UserModel } from './user';
 import { LocalModel } from './local';
 
 const eventoSchema = new Schema({
+  nome: {
+    type: String,
+    required: true
+  },
   produtor: {
     type: Schema.Types.ObjectId,
     ref: 'User',
