@@ -28,7 +28,7 @@ const eventoSchema = new Schema({
   funcionarios: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
   }],
 });
 

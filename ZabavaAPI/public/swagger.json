@@ -191,6 +191,9 @@
 			},
 			"EventoRequestBody": {
 				"properties": {
+					"nome": {
+						"type": "string"
+					},
 					"produtor": {
 						"type": "string"
 					},
@@ -213,6 +216,7 @@
 					}
 				},
 				"required": [
+					"nome",
 					"produtor",
 					"local",
 					"dataInicio",
@@ -227,6 +231,9 @@
 					"id": {
 						"type": "string"
 					},
+					"nome": {
+						"type": "string"
+					},
 					"produtor": {
 						"type": "string"
 					},
@@ -249,7 +256,8 @@
 					}
 				},
 				"required": [
-					"id"
+					"id",
+					"nome"
 				],
 				"type": "object",
 				"additionalProperties": false

@@ -40,5 +40,5 @@ export async function getUserInfo() {
     if (!decodedToken) {
         return null;
     }
-    return { name: decodedToken.name, email: decodedToken.email };
+    return {id: decodedToken._id, name: decodedToken.name, email: decodedToken.email, };
 }

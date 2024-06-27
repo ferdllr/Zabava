@@ -26,6 +26,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventoModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const eventoSchema = new mongoose_1.Schema({
+    nome: {
+        type: String,
+        required: true
+    },
     produtor: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'User',
@@ -47,7 +51,7 @@ const eventoSchema = new mongoose_1.Schema({
     funcionarios: [{
             type: mongoose_1.Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
+            required: false,
         }],
 });
 exports.EventoModel = mongoose_1.default.model('Evento', eventoSchema);

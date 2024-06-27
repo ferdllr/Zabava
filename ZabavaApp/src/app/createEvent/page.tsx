@@ -11,14 +11,15 @@ import './createEvent.css';
 
 export default function CreateEvent() {
   const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState('');
   const [nomeEvento, setNomeEvento] = useState('');
   const [selectedLocal, setSelectedLocal] = useState('');
   const [descricaoEvento, setDescricaoEvento] = useState('');
   const [dataInicio, setDataInicio] = useState<string>('');
   const [dataFim, setDataFim] = useState<string>('');
   const [locais, setLocais] = useState<any[]>([]);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false); // Estado para controlar a abertura do diálogo
-  const [confirmMessage, setConfirmMessage] = useState(''); // Mensagem de confirmação dinâmica
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export default function CreateEvent() {
       const userInfo = await getUserInfo();
       if (userInfo) {
         setUserName(userInfo.name);
+        setUserId(userInfo.id);
       }
     };
     fetchUserInfo();
@@ -45,33 +47,51 @@ export default function CreateEvent() {
 
   const handleCancel = () => {
     setConfirmMessage('Os dados preenchidos serão apagados. Deseja continuar?');
-    setConfirmDialogOpen(true); // Abre o diálogo de confirmação ao clicar em cancelar
+    setConfirmDialogOpen(true);
   };
 
   const handleCancelConfirm = () => {
-    setConfirmDialogOpen(false); // Fecha o diálogo de confirmação
+    setConfirmDialogOpen(false);
   };
 
   const handleConfirmCancel = () => {
-    setConfirmDialogOpen(false); // Fecha o diálogo de confirmação ao confirmar
-    router.push('/'); // Redireciona ao confirmar o cancelamento
+    setConfirmDialogOpen(false);
+    router.push('/');
   };
 
   const handleSubmit = () => {
     setConfirmMessage('O evento será salvo. Os dados estão corretos?');
-    setConfirmDialogOpen(true); // Abre o diálogo de confirmação ao clicar em salvar
+    setConfirmDialogOpen(true);
   };
 
-  const handleSaveConfirm = () => {
-    setConfirmDialogOpen(false); // Fecha o diálogo de confirmação ao confirmar o salvamento
+  const handleSaveConfirm = async () => {
+    setConfirmDialogOpen(false);
     const novoEvento = {
-      nomeEvento,
+      nome: nomeEvento,
+      produtor: userId,
       local: selectedLocal,
       dataInicio: new Date(dataInicio),
       dataFim: new Date(dataFim),
-      descricaoEvento,
+      descricao: descricaoEvento // Adicionei descrição do evento aqui
     };
-    console.log('Novo evento:', novoEvento);
+    try {
+      const response = await fetch('http://localhost:4000/api/evento/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(novoEvento),
+      });
+      console.log(response.status)
+      if (response.status == 200) {
+        alert('dados enviados com sucesso!');
+      } else {
+        throw new Error('Erro ao enviar os dados');
+      }
+    } catch (error) {
+      alert('Ocorreu um erro ao enviar os dados. Tente novamente.');
+      console.error('Erro ao enviar os dados do evento:', error);
+    }
   };
 
   const handleChangeLocal = (e: React.ChangeEvent<{ value: unknown }>) => {
@@ -167,7 +187,6 @@ export default function CreateEvent() {
       </div>
       <Footer />
 
-      {/* Diálogo de Confirmação */}
       <Dialog open={confirmDialogOpen} onClose={handleCancelConfirm}>
         <DialogTitle>Confirmação</DialogTitle>
         <DialogContent>
