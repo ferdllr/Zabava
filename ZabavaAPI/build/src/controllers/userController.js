@@ -73,7 +73,13 @@ let UserController = class UserController {
     async update(body) {
         try {
             const updatedUser = await user_1.UserModel.findByIdAndUpdate(body.id, body, { new: true });
-            return { result: updatedUser };
+            const secretKey = process.env.SECRET_KEY || "";
+            const jwtToken = await (0, jsonwebtoken_1.sign)({
+                _id: body.id,
+                email: body.email,
+                name: body.name,
+            }, secretKey);
+            return { result: updatedUser, token: jwtToken };
         }
         catch (error) {
             return {

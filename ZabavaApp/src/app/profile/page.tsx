@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import './profile.css';
 import Footer from '../components/Footer';
 import PrimaryAppBar from '../components/AppBar';
-import { getUserInfo } from '../api/authHandler';
+import { getUserInfo, storeToken } from '../api/authHandler';
 
 const Profile: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
@@ -14,6 +14,7 @@ const Profile: React.FC = () => {
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [isValidating, setIsValidating] = useState(false);
     const [userData, setUserData] = useState({
+        id: '',
         username: '',
         email: '',
     });
@@ -30,6 +31,7 @@ const Profile: React.FC = () => {
                 const userInfo = await getUserInfo();
                 if (userInfo) {
                     setUserData({
+                        id: userInfo.id,
                         username: userInfo.name,
                         email: userInfo.email,
                     });
@@ -71,7 +73,7 @@ const Profile: React.FC = () => {
                     alert('dados enviados com sucesso!');
                     setIsValidating(false);
                     setIsFormSubmitted(true);
-                } else{
+                } else {
                     throw new Error('Erro ao enviar os dados');
                 }
             } catch (error) {
@@ -87,6 +89,34 @@ const Profile: React.FC = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setStaffData(prevData => ({ ...prevData, [name]: value }));
+    };
+
+    const handleProfileSave = async () => {
+        try {
+            const response = await fetch('http://localhost:4000/api/user/update', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: userData.id, // Supondo que você tenha o ID do usuário armazenado no estado userInfo
+                    name: userData.username,
+                    email: userData.email,
+                }),
+            });
+
+            if (response.ok) {
+                alert('Informações do perfil atualizadas com sucesso!');
+                const responseJSON = await response.json()
+                storeToken(responseJSON.token)
+                setIsEditing(false);
+            } else {
+                throw new Error('Erro ao atualizar as informações do perfil.');
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar as informações do perfil:', error);
+            alert('Ocorreu um erro ao atualizar as informações do perfil. Tente novamente.');
+        }
     };
 
     return (
@@ -113,7 +143,7 @@ const Profile: React.FC = () => {
                                     onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                                 />
                             </FormControl>
-                            <Button className='save-button' variant="contained" onClick={handleEditToggle}>Salvar</Button>
+                            <Button className='save-button' variant="contained" onClick={handleProfileSave}>Salvar</Button>
                         </Box>
                     ) : (
                         <Box>

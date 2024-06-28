@@ -87,7 +87,13 @@ export default class UserController {
   public async update(@Body() body: UserUpdateBody): Promise<JsonObject> {
     try {
       const updatedUser = await UserModel.findByIdAndUpdate(body.id, body, { new: true });
-      return { result: updatedUser };
+      const secretKey = process.env.SECRET_KEY || ""
+      const jwtToken = await sign({
+        _id: body.id,
+        email: body.email,
+        name: body.name,
+      }, secretKey)
+      return { result: updatedUser, token: jwtToken };
     } catch (error: any) {
       return {
         error: error.message,
